@@ -6,15 +6,20 @@ const db = require("./database");
 
 app.use(express.urlencoded({extended:false}));
 
-db.execute('SELECT * FROM world.city LIMIT 5').then((data)=>{
-    console.log(data[0]);
-})
+const dbData = async()=>{
+    const data = await db.execute('SELECT * FROM world.city LIMIT 5');
+
+    return await data;
+}
+
 
 app.set("view engine","ejs");
 app.use(express.static("public"));
 
-app.get("/",(req,res)=>{
-   res.render("home");
+app.get("/",async(req,res)=>{
+    const data = await dbData(); 
+    console.log(data[0]);
+   res.render("home",{data:data[0]});
 })
 
 app.listen(3000);

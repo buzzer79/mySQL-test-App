@@ -20,21 +20,22 @@
     <table>
         <tr>
             <th>Nr</th>
-            <th>City</th>
-            <th>Country code</th>
-            <th>District</th>
-            <th>Population</th>
+            <th>Title</th>
+            <th>Release year</th>
+            <th>Rating</th>
+            <th>Length</th>
         </tr>
         <% data.forEach((val)=>{ %>
         <tr>
-            <td><%= val.ID %></td>
-            <td><%= val.Name %></td>
-            <td><%= val.CountryCode %></td>
-            <td><%= val.District %></td>
-            <td><%= val.Population %></td>
+            <td><%= val.film_id %></td>
+            <td><%= val.title %></td>
+            <td><%= val.release_year %></td>
+            <td><%= val.rating %></td>
+            <td><%= val.length %></td>
         </tr>
         <% }); %>
     </table>
+    <a href="/next">show next</a>
 </body>
 
 </html>

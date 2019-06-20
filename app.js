@@ -4,48 +4,81 @@ const path = require("path");
 const app = express();
 const db = require("./database");
 
-app.use(express.urlencoded({extended:false}));
+app.use(express.urlencoded({
+    extended: false
+}));
 
 let cnt = 0;
-app.set("view engine","ejs");
+let page = 0;
+let file = "";
+app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 
+app.get("/", async (req, res) => {
 
+    const sqlQuery =
+        `SELECT film_id,title,release_year,rating,length
+         FROM sakila.film 
+         LIMIT 20`;
 
-app.get("/",async(req,res)=>{
-
-    const dbData = async()=>{
-        const data = await db.execute('SELECT * FROM sakila.film LIMIT 10');
-        return await data;
-    }
-    
-    const data = await dbData(); 
-   
-   res.render("home",{data:data[0]});
-});
-
-app.get("/next",async(req,res)=>{
-    // const add = req.params.add;
-    // console.log(add);
-    cnt +=10;
-    console.log(cnt);
-    let sqlQuery = `SELECT * FROM sakila.film LIMIT ${cnt} OFFSET 10`
-    
-
-    const dbData = async()=>{
-        
+    const dbData = async () => {
         const data = await db.execute(sqlQuery);
         return await data;
-        
     }
-    
-    const data = await dbData(); 
-    console.log(data[0][1]);
-  
 
-    res.render("home",{data:data[0]});
+    const data = await dbData();
+
+    res.render("home", {
+        data: data[0],
+        cnt
+    });
+});
+
+app.get("/next/:nr", async (req, res) => {
+    page += 1;
+    cnt += 20;
+    
+ 
+    const sqlQuery =
+    `SELECT film_id,title,release_year,rating,length
+     FROM sakila.film 
+     WHERE film_id BETWEEN ${cnt} AND ${cnt+20}`;
+     console.log(sqlQuery);
+
+    const dbData = async () => {
+
+        const data = await db.execute(sqlQuery);
+        return await data;
+    }
+
+     file = await dbData();
+
+    res.render("home",{data:file[0],page});
 })
+
+app.get("/back/:nr",async(req,res)=>{
+    page -= 1;
+    cnt -= 20;
+
+    const sqlQuery =
+    `SELECT film_id,title,release_year,rating,length
+     FROM sakila.film 
+     WHERE film_id BETWEEN ${cnt} AND ${cnt+20}`;
+     console.log(sqlQuery);
+
+    const dbData = async () => {
+
+        const data = await db.execute(sqlQuery);
+        return await data;
+    }
+
+     file = await dbData();
+
+    res.render("home",{data:file[0],page});
+});
+
+
 
 
 app.listen(3000);

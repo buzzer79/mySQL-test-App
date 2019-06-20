@@ -14,11 +14,19 @@
             justify-content: flex-start;
             align-items: center;
         }
+        th{
+            background-color: black;
+            color: white;
+        }
         table,
         th,
         td {
             border: 1px solid black;
             border-collapse: collapse;
+            text-align: center;
+        }
+        td:nth-child(2){
+            width:300px;
         }
         div{
             margin-top: 10px;
@@ -44,7 +52,8 @@
             <td><%= val.title %></td>
             <td><%= val.release_year %></td>
             <td><%= val.rating %></td>
-            <td><%= val.length %></td>
+            <td><%= val.length %> min</td>
+            <td><%= val.actor %> min</td>
         </tr>
         <% }); %>
     </table>
